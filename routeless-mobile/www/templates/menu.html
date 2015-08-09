@@ -27,6 +27,13 @@
 
       </ion-list>
 
+      <ion-list>
+
+        <ion-item nav-clear menu-close ng-click="loadCourse(course.id)" ng-repeat="(courseId, course) in courses.objects track by course.id">
+          {{course.id}}: {{course.description}}
+        </ion-item>
+
+      </ion-list>
     </ion-content>
 
   </ion-side-menu>

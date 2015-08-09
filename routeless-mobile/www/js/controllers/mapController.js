@@ -6,6 +6,7 @@ angular.module('starter').controller('MapController',
     '$ionicPopup',
     'LocationsService',
     'InstructionsService',
+    'Course',
     function(
       $scope,
       $cordovaGeolocation,
@@ -13,7 +14,8 @@ angular.module('starter').controller('MapController',
       $ionicModal,
       $ionicPopup,
       LocationsService,
-      InstructionsService
+      InstructionsService,
+      Course
       ) {
 
       /**
@@ -23,6 +25,12 @@ angular.module('starter').controller('MapController',
 
         $scope.locations = LocationsService.savedLocations;
         $scope.newLocation;
+        
+        $scope.courses = Course.query();
+        $scope.course = Course.query({id: 1});
+               
+        console.log($scope.course);
+        console.log($scope.courses);
 
         if(!InstructionsService.instructions.newLocations.seen) {
 
@@ -33,25 +41,7 @@ angular.module('starter').controller('MapController',
           instructionsPopup.then(function(res) {
             InstructionsService.instructions.newLocations.seen = true;
             });
-
         }
-
-        $scope.map = {
-          defaults: {
-            tileLayer: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-            maxZoom: 18,
-            zoomControlPosition: 'bottomleft'
-          },
-          markers : {},
-          events: {
-            map: {
-              enable: ['context'],
-              logic: 'emit'
-            }
-          }
-        };
-
-        $scope.goTo(0);
 
       });
 
@@ -85,6 +75,10 @@ angular.module('starter').controller('MapController',
         $scope.goTo(LocationsService.savedLocations.length - 1);
       };
 
+      $scope.loadCourse = function(courseId) {        
+        $scope.course = Course.query({id: courseId});
+      };
+      
       /**
        * Center map on specific saved location
        * @param locationKey
