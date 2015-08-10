@@ -6,8 +6,7 @@
 angular.module('starter', ['ionic', 
                            'leaflet-directive', 
                            'ngCordova', 
-                           'igTruncate',
-                           'ngResource',
+                           'igTruncate', 
                            'routelessServices'])
 
   .run(function($ionicPlatform) {

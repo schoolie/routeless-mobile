@@ -26,22 +26,58 @@ angular.module('starter').controller('MapController',
         $scope.locations = LocationsService.savedLocations;
         $scope.newLocation;
         
+        angular.extend($scope, {events: {},
+          layers: {
+            baselayers: {
+                googleTerrain: {
+                    name: 'Google Terrain',
+                    layerType: 'TERRAIN',
+                    type: 'google'
+                },
+                googleHybrid: {
+                        name: 'Google Hybrid',
+                        layerType: 'HYBRID',
+                        type: 'google'
+                    },
+                googleRoadmap: {
+                    name: 'Google Streets',
+                    layerType: 'ROADMAP',
+                    type: 'google'
+                },
+                osm: {
+                  name: 'OpenStreetMap',
+                  url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  type: 'xyz'
+                },
+                caltopo: {
+                  name: 'CalTopo',
+                  url: "http://s3-us-west-1.amazonaws.com/caltopo/topo/{z}/{x}/{y}.png?v=1",
+                  type: 'xyz'
+                }
+            }
+          }
+        });
+
+        $scope.center = {};
+        
         $scope.courses = Course.query();
         $scope.course = Course.query({id: 1});
+        
                
+        console.log($scope.center);
         console.log($scope.course);
         console.log($scope.courses);
 
-        if(!InstructionsService.instructions.newLocations.seen) {
-
-          var instructionsPopup = $ionicPopup.alert({
-            title: 'Add Locations',
-            template: InstructionsService.instructions.newLocations.text
-          });
-          instructionsPopup.then(function(res) {
-            InstructionsService.instructions.newLocations.seen = true;
-            });
-        }
+//        if(!InstructionsService.instructions.newLocations.seen) {
+//
+//          var instructionsPopup = $ionicPopup.alert({
+//            title: 'Add Locations',
+//            template: InstructionsService.instructions.newLocations.text
+//          });
+//          instructionsPopup.then(function(res) {
+//            InstructionsService.instructions.newLocations.seen = true;
+//            });
+//        }
 
       });
 
@@ -75,8 +111,18 @@ angular.module('starter').controller('MapController',
         $scope.goTo(LocationsService.savedLocations.length - 1);
       };
 
-      $scope.loadCourse = function(courseId) {        
-        $scope.course = Course.query({id: courseId});
+      $scope.loadCourse = function(courseId) {       
+        console.log('changing course');
+        console.log(courseId);
+        $scope.course = Course.query({id: courseId}, function(data) {          
+          $scope.center = {
+            lat: data.lat,
+            lng: data.lng,
+            zoom: data.zoom
+          };
+        });
+        
+        console.log($scope.center);
       };
       
       /**
@@ -111,19 +157,38 @@ angular.module('starter').controller('MapController',
         $cordovaGeolocation
           .getCurrentPosition()
           .then(function (position) {
-            $scope.map.center.lat  = position.coords.latitude;
-            $scope.map.center.lng = position.coords.longitude;
-            $scope.map.center.zoom = 15;
+            console.log(position);
+            $scope.course.center.lat  = position.coords.latitude;
+            $scope.course.center.lng = position.coords.longitude;
+            $scope.course.center.zoom = 15;
 
-            $scope.map.markers.now = {
-              lat:position.coords.latitude,
-              lng:position.coords.longitude,
-              message: "You Are Here",
-              focus: true,
-              draggable: false
-            };
+//            $scope.map.markers.now = {
+//              lat:position.coords.latitude,
+//              lng:position.coords.longitude,
+//              message: "You Are Here",
+//              focus: true,
+//              draggable: false
+//            };
 
           }, function(err) {
+            // error
+            console.log("Location error!");
+            console.log(err);
+          });
+
+      };
+      
+      $scope.checkDistance = function(cpId){
+
+        $cordovaGeolocation
+          .getCurrentPosition()
+          .then(function (position) {
+            target = $scope.course.markers[cpId];
+            targLatLng = L.latLng(target.lat, target.lng);
+            currLatLng = L.latLng(position.coords.latitude, position.coords.longitude);
+            distance = currLatLng.distanceTo(targLatLng);
+            console.log(distance);
+        }, function(err) {
             // error
             console.log("Location error!");
             console.log(err);

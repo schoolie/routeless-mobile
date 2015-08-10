@@ -19,13 +19,23 @@ routelessServices.factory('Course', ['$resource',
           isArray:false,
           transformResponse: function(data) {
             data = JSON.parse(data);
-            data.lat = parseFloat(data.lat, 10) || 40.4279;
-            data.lng = parseFloat(data.lng, 10) || -86.9188;
-            data.zoom = parseInt(data.zoom) || 14;
+            data.center = {
+              lat: parseFloat(data.lat, 10) || 40.4279,
+              lng: parseFloat(data.lng, 10) || -86.9188,
+              zoom: parseInt(data.zoom) || 14
+            };
             
+            data.markers = {};
             if('check_points' in data){
               data.check_points.forEach(function(cp){
                 cp.draggable = true;
+                data.markers[cp.id] = {
+                  id: cp.id,
+                  lat: cp.lat,
+                  lng: cp.lng,
+                  title: cp.id,
+                  message: cp.message
+                };
               });
             }
             return data;

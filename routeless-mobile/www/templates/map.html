@@ -10,7 +10,7 @@
 
   <ion-content data-tap-disabled="true">
 
-    <leaflet center="course" markers="course.check_points" ng-if="course"></leaflet>
+    <leaflet layers="layers" center="course.center" markers="course.markers" ng-if="course.$resolved"></leaflet>
 
   </ion-content>
 
