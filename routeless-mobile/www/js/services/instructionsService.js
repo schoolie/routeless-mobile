@@ -1,4 +1,4 @@
-angular.module('starter').factory('InstructionsService', [ function() {
+angular.module('routeless').factory('InstructionsService', [ function() {
 
   var instructionsObj = {};
 

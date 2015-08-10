@@ -1,4 +1,4 @@
-angular.module('starter').factory('LocationsService', [ function() {
+angular.module('routeless').factory('LocationsService', [ function() {
 
   var locationsObj = {};
 

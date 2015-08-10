@@ -6,7 +6,7 @@ var routelessServices = angular.module('routelessServices', ['ngResource']);
 
 routelessServices.factory('User', ['$resource',
   function($resource){
-    return $resource('http://localhost:5000/api_1_0/users_/:id', {id:'@id'}, {
+    return $resource('http://192.168.1.65:5000/api_1_0/users_/:id', {id:'@id'}, {
         query: {method:'GET', isArray:false}
     });
   }]);
