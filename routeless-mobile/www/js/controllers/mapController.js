@@ -188,6 +188,7 @@ angular.module('routeless').controller('MapController',
             currLatLng = L.latLng(position.coords.latitude, position.coords.longitude);
             distance = currLatLng.distanceTo(targLatLng);
             console.log(distance);
+            $scope.course.markers[cpId].distance = distance;
         }, function(err) {
             // error
             console.log("Location error!");
