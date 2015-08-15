@@ -181,7 +181,7 @@ angular.module('routeless').controller('MapController',
       $scope.checkDistance = function(cpId){
 
         $cordovaGeolocation
-          .getCurrentPosition()
+          .getCurrentPosition({enableHighAccuracy:true})
           .then(function (position) {
             target = $scope.course.markers[cpId];
             targLatLng = L.latLng(target.lat, target.lng);
