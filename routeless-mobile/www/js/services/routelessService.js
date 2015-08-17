@@ -4,16 +4,16 @@
 
 var routelessServices = angular.module('routelessServices', ['ngResource']);
 
-routelessServices.factory('User', ['$resource',
-  function($resource){
-    return $resource('http://brianschoolcraft.com:5000/api_1_0/users_/:id', {id:'@id'}, {
+routelessServices.factory('User', ['$resource', 'rlConfig',
+  function($resource, rlConfig){
+    return $resource(rlConfig.backend+'api_1_0/users_/:id', {id:'@id'}, {
         query: {method:'GET', isArray:false}
     });
   }]);
 
-routelessServices.factory('Course', ['$resource',
-  function($resource){
-    return $resource('http://brianschoolcraft.com:5000/api_1_0/courses/:id', {id:'@id'}, {
+routelessServices.factory('Course', ['$resource', 'rlConfig',
+  function($resource, rlConfig){
+    return $resource(rlConfig.backend+'api_1_0/courses/:id', {id:'@id'}, {
         query: {
           method:'GET',
           isArray:false,
@@ -47,6 +47,8 @@ routelessServices.factory('Course', ['$resource',
           transformRequest: function(data) {
             var proc_data = data;
             delete proc_data.autoDiscover;
+            delete proc_data.center;
+            delete proc_data.markers; //need to make mobile and client handle markers/checkpoints the same way...
             proc_data.check_points.forEach(function(cp){
               delete cp.draggable;
               delete cp.transient; //Strip transient gmaps data for passing to server
@@ -58,9 +60,10 @@ routelessServices.factory('Course', ['$resource',
     });
   }]);
 
-routelessServices.factory('CheckPoint', ['$resource',
-  function($resource){
-    return $resource('http://brianschoolcraft.com:5000/api_1_0/checkpoints/:id', {id:'@id'}, {
+routelessServices.factory('CheckPoint', ['$resource', 'rlConfig',
+  function($resource, rlConfig){
+    rlConfig = {backend: ''};
+    return $resource(rlConfig.backend+'api_1_0/checkpoints/:id', {id:'@id'}, {
         query: {method:'GET', isArray:false},
         update: {method: 'PUT'}  
     });

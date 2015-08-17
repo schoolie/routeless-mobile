@@ -7,6 +7,8 @@ angular.module('routeless').controller('MapController',
     'LocationsService',
     'InstructionsService',
     'Course',
+    'rlConfig',
+    
     function(
       $scope,
       $cordovaGeolocation,
@@ -160,15 +162,14 @@ angular.module('routeless').controller('MapController',
             console.log(position);
             $scope.course.center.lat  = position.coords.latitude;
             $scope.course.center.lng = position.coords.longitude;
-            $scope.course.center.zoom = 15;
 
-//            $scope.map.markers.now = {
-//              lat:position.coords.latitude,
-//              lng:position.coords.longitude,
+            $scope.course.markers['now'] = {
+              lat:position.coords.latitude,
+              lng:position.coords.longitude,
 //              message: "You Are Here",
 //              focus: true,
 //              draggable: false
-//            };
+            };
 
           }, function(err) {
             // error

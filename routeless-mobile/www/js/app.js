@@ -40,7 +40,7 @@ angular.module('routeless', ['ionic',
             templateUrl: "templates/map.html"
           }
         }
-      })
+      });
 
     $urlRouterProvider.otherwise('/app/map');
 
