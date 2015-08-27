@@ -1,3 +1,3 @@
 angular.module('routeless').constant('rlConfig', {
-  backend: 'http://brianschoolcraft.com:5000/'
+  backend: 'http://apidev.routeless.co/'
 });
