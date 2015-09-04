@@ -14,7 +14,7 @@
   <ion-side-menu side="left">
 
     <header class="bar bar-header bar-stable">
-      <h1 class="title">Courses</h1>
+      <h1 class="title">{{authUser.username}}</h1>
     </header>
 
     <ion-content class="has-header">
@@ -29,11 +29,7 @@
 
       <ion-list>
 
-        <ion-item nav-clear menu-close ng-click="loadCourse(course.id)" ng-repeat="(courseId, course) in courses.objects track by course.id">
-          {{course.id}}: {{course.description}}
-        </ion-item>
 
-      </ion-list>
       <ion-list>
         <ion-item ng-click="checkDistance(cp.id)" ng-repeat="cp in course.markers">
           CP{{cp.id}} {{cp.distance}}

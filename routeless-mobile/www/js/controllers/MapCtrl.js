@@ -1,13 +1,15 @@
-angular.module('routeless').controller('MapController',
+routelessControllers.controller('MapCtrl',
   [ '$scope',
     '$cordovaGeolocation',
     '$stateParams',
     '$ionicModal',
     '$ionicPopup',
+    '$localStorage',
     'LocationsService',
     'InstructionsService',
     'Course',
     'rlConfig',
+    'TokenService',
     
     function(
       $scope,
@@ -15,11 +17,24 @@ angular.module('routeless').controller('MapController',
       $stateParams,
       $ionicModal,
       $ionicPopup,
+      $localStorage,
       LocationsService,
       InstructionsService,
-      Course
+      Course,
+      rlConfig,
+      TokenService
       ) {
+      
+      console.log(TokenService);
+      
+      $scope.$storage = $localStorage;
 
+      $scope.$watch(function() {
+        return $scope.$storage.token;
+      }, function(newVal, oldVal) {
+        $scope.authUser = TokenService.getAuthUser();
+      });
+      
       /**
        * Once state loaded, get put map on scope.
        */
@@ -65,10 +80,6 @@ angular.module('routeless').controller('MapController',
         $scope.courses = Course.query();
         $scope.course = Course.query({id: 1});
         
-               
-        console.log($scope.center);
-        console.log($scope.course);
-        console.log($scope.courses);
 
 //        if(!InstructionsService.instructions.newLocations.seen) {
 //
@@ -122,6 +133,7 @@ angular.module('routeless').controller('MapController',
             lng: data.lng,
             zoom: data.zoom
           };
+          window.location = "#/map";
         });
         
         console.log($scope.center);

@@ -4,10 +4,12 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('routeless', ['ionic', 
+                           'ngStorage',
                            'leaflet-directive', 
                            'ngCordova', 
                            'igTruncate', 
-                           'routelessServices'])
+                           'routelessServices',
+                           'routelessControllers'])
 
   .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -30,7 +32,7 @@ angular.module('routeless', ['ionic',
         url: "/app",
         abstract: true,
         templateUrl: "templates/menu.html",
-        controller: 'MapController'
+        controller: 'MapCtrl'
       })
 
       .state('app.map', {
@@ -38,6 +40,26 @@ angular.module('routeless', ['ionic',
         views: {
           'menuContent' :{
             templateUrl: "templates/map.html"
+          }
+        }
+      })
+
+      .state('app.login', {
+        url: "/login",        
+        views: {
+          'menuContent' :{    
+            templateUrl: "templates/login.html",
+            controller: 'LoginCtrl'
+          }
+        }
+      })
+      
+      .state('app.courses', {
+        url: "/courses",        
+        views: {
+          'menuContent' :{    
+            templateUrl: "templates/courses.html",
+            controller: 'MapCtrl'
           }
         }
       });
