@@ -50,6 +50,15 @@ angular.module('routeless', ['ionic',
           }
         }
       })
+      .state('tabs.course', {
+        url: '/courses/:courseId',
+        views: {
+          'home-tab': {
+            templateUrl: 'templates/map.html',
+            controller: 'CourseDetailCtrl'
+          }
+        }
+      })
       .state('tabs.facts', {
         url: '/facts',
         views: {
@@ -91,14 +100,6 @@ angular.module('routeless', ['ionic',
           }
         }
       })
-      .state('tabs.contact', {
-        url: '/contact',
-        views: {
-          'contact-tab': {
-            templateUrl: 'templates/contact.html'
-          }
-        }
-      });
 
 
     $urlRouterProvider.otherwise('/sign-in');

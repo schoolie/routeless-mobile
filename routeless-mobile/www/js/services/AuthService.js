@@ -18,7 +18,7 @@ routelessServices.factory('AuthService',
           },
           login: function (data, success, error) {
               $http.post(rlConfig.backend + 'auth', data).success(function(res) {
-                TokenService.setToken(res.token);
+                TokenService.setToken(res.access_token);
                 success(res);
               }).error(error);
           },

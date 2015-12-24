@@ -6,6 +6,6 @@ routelessControllers.controller('CourseListCtrl', ['$scope', 'Course', '$state',
     
     $scope.loadCourse = function(id) {
       console.log(id);
-      $state.go('app.map', {id: id});
+      $state.go('tabs.courses', {id: id});
     };
   }]);
