@@ -46,6 +46,16 @@ routelessServices.factory('TokenService',
           getToken: function() {
               var token = $localStorage.token;
               return token;
+          },
+          authHeaders: {'Authorization': function() {
+              token = $localStorage.token;
+              if (typeof token !== 'undefined') {
+                 return 'JWT ' + token;
+              }
+              else {
+                 return null;
+              }
+            }
           }
           
        };

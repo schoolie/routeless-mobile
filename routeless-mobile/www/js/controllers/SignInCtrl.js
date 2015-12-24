@@ -14,6 +14,7 @@ routelessControllers.controller('SignInCtrl',
     
     function successAuth(res) {
       console.log('Sign-In', $scope.user);
+      $scope.error = '';
       $state.go('tabs.home');
     }
     

@@ -1,15 +1,15 @@
 <ion-view title="Courses">
 
-  <ion-content class="padding">
-    
+  <ion-content padding="true">
       <ion-list>
-
         <ion-item nav-clear menu-close ng-click="loadCourse(course.id)" ng-repeat="(courseId, course) in courses.objects track by course.id">
           {{course.id}}: {{course.description}}
         </ion-item>
-
-      </ion-list>
-    
+        
+        
+    <p>
+      <a class="button icon icon-right ion-chevron-right" href="#/tab/facts">Scientific Facts</a>
+    </p>
+      </ion-list>    
   </ion-content>
-
 </ion-view>
