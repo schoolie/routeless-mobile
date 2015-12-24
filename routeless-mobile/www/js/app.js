@@ -27,43 +27,80 @@ angular.module('routeless', ['ionic',
 
   .config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
-
-      .state('app', {
-        url: "/app",
+      .state('signin', {
+        url: '/sign-in',
+        templateUrl: 'templates/sign-in.html',
+        controller: 'SignInCtrl'
+      })
+      .state('forgotpassword', {
+        url: '/forgot-password',
+        templateUrl: 'templates/forgot-password.html'
+      })
+      .state('tabs', {
+        url: '/tab',
         abstract: true,
-        templateUrl: "templates/menu.html",
-        controller: 'MapCtrl'
+        templateUrl: 'templates/tabs.html'
       })
-
-      .state('app.map', {
-        url: "/map",
+      .state('tabs.courses', {
+        url: '/courses',
         views: {
-          'menuContent' :{
-            templateUrl: "templates/map.html"
+          'home-tab': {
+            templateUrl: 'templates/courses.html',
+            controller: 'CourseListCtrl'
           }
         }
       })
-
-      .state('app.login', {
-        url: "/login",        
+      .state('tabs.facts', {
+        url: '/facts',
         views: {
-          'menuContent' :{    
-            templateUrl: "templates/login.html",
-            controller: 'LoginCtrl'
+          'home-tab': {
+            templateUrl: 'templates/facts.html'
           }
         }
       })
-      
-      .state('app.courses', {
-        url: "/courses",        
+      .state('tabs.facts2', {
+        url: '/facts2',
         views: {
-          'menuContent' :{    
-            templateUrl: "templates/courses.html",
-            controller: 'MapCtrl'
+          'home-tab': {
+            templateUrl: 'templates/facts2.html'
+          }
+        }
+      })
+      .state('tabs.about', {
+        url: '/about',
+        views: {
+          'about-tab': {
+            templateUrl: 'templates/about.html'
+          }
+        }
+      })
+      .state('tabs.navstack', {
+        url: '/navstack',
+        views: {
+          'about-tab': {
+            templateUrl: 'templates/nav-stack.html'
+          }
+        }
+      })
+      .state('tabs.home', {
+        url: '/home',
+        views: {
+          'home-tab': {
+            templateUrl: 'templates/home.html',
+            controller: 'HomeTabCtrl'
+          }
+        }
+      })
+      .state('tabs.contact', {
+        url: '/contact',
+        views: {
+          'contact-tab': {
+            templateUrl: 'templates/contact.html'
           }
         }
       });
 
-    $urlRouterProvider.otherwise('/app/map');
+
+    $urlRouterProvider.otherwise('/sign-in');
 
   });

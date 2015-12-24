@@ -4,12 +4,9 @@ routelessControllers.controller('MapCtrl',
     '$stateParams',
     '$ionicModal',
     '$ionicPopup',
-    '$localStorage',
     'LocationsService',
     'InstructionsService',
     'Course',
-    'rlConfig',
-    'TokenService',
     
     function(
       $scope,
@@ -17,23 +14,10 @@ routelessControllers.controller('MapCtrl',
       $stateParams,
       $ionicModal,
       $ionicPopup,
-      $localStorage,
       LocationsService,
       InstructionsService,
-      Course,
-      rlConfig,
-      TokenService
-      ) {
-      
-      console.log(TokenService);
-      
-      $scope.$storage = $localStorage;
-
-      $scope.$watch(function() {
-        return $scope.$storage.token;
-      }, function(newVal, oldVal) {
-        $scope.authUser = TokenService.getAuthUser();
-      });
+      Course) {
+            
       
       /**
        * Once state loaded, get put map on scope.
@@ -79,18 +63,6 @@ routelessControllers.controller('MapCtrl',
         
         $scope.courses = Course.query();
         $scope.course = Course.query({id: 1});
-        
-
-//        if(!InstructionsService.instructions.newLocations.seen) {
-//
-//          var instructionsPopup = $ionicPopup.alert({
-//            title: 'Add Locations',
-//            template: InstructionsService.instructions.newLocations.text
-//          });
-//          instructionsPopup.then(function(res) {
-//            InstructionsService.instructions.newLocations.seen = true;
-//            });
-//        }
 
       });
 
@@ -123,8 +95,8 @@ routelessControllers.controller('MapCtrl',
         $scope.modal.hide();
         $scope.goTo(LocationsService.savedLocations.length - 1);
       };
-
-      $scope.loadCourse = function(courseId) {       
+ 
+     $scope.loadCourse = function(courseId) {       
         console.log('changing course');
         console.log(courseId);
         $scope.course = Course.query({id: courseId}, function(data) {          
