@@ -39,7 +39,8 @@ angular.module('routeless', ['ionic',
       .state('tabs', {
         url: '/tab',
         abstract: true,
-        templateUrl: 'templates/tabs.html'
+        templateUrl: 'templates/tabs.html',
+        controller: 'TabCtrl'
       })
       .state('tabs.courses', {
         url: '/courses',

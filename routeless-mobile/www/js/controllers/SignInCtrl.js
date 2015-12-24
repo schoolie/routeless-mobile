@@ -4,11 +4,9 @@ routelessControllers.controller('SignInCtrl',
   '$localStorage',
   '$state',
   'AuthService',
-  function LoginController($scope, $localStorage, $state, AuthService) {
+  function SignInController($scope, $localStorage, $state, AuthService) {
     
-    $scope.user = {
-      id: 1
-    };
+    $scope.user = {};
     
     $scope.$storage = $localStorage;
     

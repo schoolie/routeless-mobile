@@ -19,11 +19,13 @@ routelessServices.factory('AuthService',
           login: function (data, success, error) {
               $http.post(rlConfig.backend + 'auth', data).success(function(res) {
                 TokenService.setToken(res.access_token);
+                console.log('Logging In');
                 success(res);
               }).error(error);
           },
           logout: function (success) {
               TokenService.clearToken();
+              console.log('Logging Out');
               success();
           }          
        };
