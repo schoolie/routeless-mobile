@@ -1,10 +1,9 @@
-routelessControllers.controller('CourseDetailCtrl',
+routelessControllers.controller('EventDetailCtrl',
   [ '$scope',
     '$cordovaGeolocation',
     '$stateParams',
     'leafletMarkerEvents',
     'TokenService',
-    'Course',
     'Event',
     
     function(
@@ -13,7 +12,6 @@ routelessControllers.controller('CourseDetailCtrl',
       $stateParams,
       leafletMarkerEvents,
       TokenService,
-      Course,
       Event) {
             
       
@@ -62,45 +60,43 @@ routelessControllers.controller('CourseDetailCtrl',
             }
           });
 
-          var cp_from_id = function(id) {
-            $scope.course.check_points.forEach(function(cp) {
-              var cp = cp;
-              if (cp.id === id) {
-                console.log(cp);
-                return cp;
-              }
-            });
-          };
-          
           var active_id;
           
           var markerEvents = leafletMarkerEvents.getAvailableEvents();
           for (var k in markerEvents){
               var eventName = 'leafletDirectiveMarker.myMap.' + markerEvents[k];
               $scope.$on(eventName, function(event, args){
-                if (event.name === 'leafletDirectiveMarker.myMap.click') {
+                if (event.name === 'leafletDirectiveMarker.myMap.mouseout') {
 //                  $scope.eventDetected = event.name;
                   active_id = args.leafletEvent.target.options.id;
-                  console.log(cp_from_id(active_id));
-                  $scope.active_marker = cp_from_id(active_id);
+                  $scope.active_marker = $scope.event.course.markers[active_id];
+                  $scope.checkDistance(active_id);
                 }
               });
           }
           
-          $scope.course = Course.query({id: $stateParams.courseId}, success=function() {
+          $scope.event = Event.query({id: $stateParams.eventId}, success=function() {
             console.log('success');
           });          
           
         });
-        
-        $scope.createEvent = function() {
-          var current_user = TokenService.getAuthUser();
-          console.log(TokenService.authHeaders);
-          
-          event = new Event({         
-            user_id: current_user.id,
-            course_id: $scope.course.id
-          });          
-          event.$save();
+            
+        $scope.checkDistance = function(active_id) {
+
+          $cordovaGeolocation
+            .getCurrentPosition({enableHighAccuracy:true})
+            .then(function (position) {
+              target = $scope.event.course.markers[active_id];
+              targLatLng = L.latLng(target.lat, target.lng);
+              currLatLng = L.latLng(position.coords.latitude, position.coords.longitude);
+              distance = currLatLng.distanceTo(targLatLng);
+              console.log(distance);
+              $scope.event.course.markers[active_id].distance = distance;
+            }, function(err) {
+              // error
+              console.log("Location error!");
+              console.log(err);
+            });
+
         };
       }]);

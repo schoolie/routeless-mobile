@@ -4,6 +4,10 @@
 routelessServices.factory('Course', ['$resource', 'TokenService', 'rlConfig',
   function($resource, TokenService, rlConfig){
     return $resource(rlConfig.backend+'api_1_0/courses/:id', {id:'@id'}, {
+        save: {
+          method: 'POST',
+          headers: TokenService.authHeaders
+        },
         query: {
           method:'GET',
           isArray:false,
@@ -13,25 +17,14 @@ routelessServices.factory('Course', ['$resource', 'TokenService', 'rlConfig',
           },
           transformResponse: function(data) {
             data = JSON.parse(data);
+            console.log(data);
+
             data.center = {
               lat: parseFloat(data.lat, 10) || 40.4279,
               lng: parseFloat(data.lng, 10) || -86.9188,
               zoom: parseInt(data.zoom) || 14
             };
             
-            data.markers = {};
-            if('check_points' in data){
-              data.check_points.forEach(function(cp){
-                cp.draggable = true;
-                data.markers[cp.id] = {
-                  id: cp.id,
-                  lat: cp.lat,
-                  lng: cp.lng,
-                  title: cp.id,
-                  message: cp.message
-                };
-              });
-            }
             return data;
           }
           

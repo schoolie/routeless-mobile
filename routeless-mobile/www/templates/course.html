@@ -13,8 +13,18 @@
 
   <ion-content data-tap-disabled="true">
     
-    <leaflet layers="layers" center="course.center" markers="course.markers" ng-if="course.$resolved"></leaflet>
+    <leaflet id="myMap"
+             layers="layers" 
+             center="course.center" 
+             markers="course.check_points" 
+             event-broadcast="events"
+             ng-if="course.$resolved">      
+    </leaflet>
+    
+    <button ng-click="createEvent()">Start Event</button>
 
+    <p>Active Marker: {{active_marker}}</p>
+    
   </ion-content>
 
 </ion-view>

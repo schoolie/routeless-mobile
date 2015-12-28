@@ -11,6 +11,10 @@ body {
   bottom : 10px;
 }
 
+.leaflet-container {
+  height: 75%;
+}
+
 .item.item-body p {
   margin-top: 0;
 }

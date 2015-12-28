@@ -1,0 +1,13 @@
+<ion-view title="Events">
+
+  <ion-content padding="true">
+      <ion-list>
+        <!--<ion-item nav-clear menu-close ng-click="loadCourse(course.id)" ng-repeat="(courseId, course) in courses.objects track by course.id">-->
+          <!--{{course.id}}: {{course.description}}-->
+        <ion-item ng-repeat="(eventId, event) in events.objects track by event.id">
+          <a class="button icon icon-right ion-chevron-right" href="#/tab/events/{{event.id}}">Event {{event.id}}</a>
+        </ion-item>
+
+      </ion-list>    
+  </ion-content>
+</ion-view>

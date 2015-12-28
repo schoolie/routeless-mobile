@@ -1,0 +1,30 @@
+<ion-view title="Map">
+
+<!--  <ion-nav-buttons side="left">
+    <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  
+  
+  <ion-nav-buttons side="right">
+    <button ng-click="locate();" class="button button-icon icon ion-pinpoint"></button>
+  </ion-nav-buttons>-->
+
+  
+
+  <ion-content data-tap-disabled="true">
+    
+    <leaflet id="myMap"
+             layers="layers" 
+             center="event.course.center" 
+             markers="event.course.markers" 
+             event-broadcast="lfevents"
+             ng-if="event.$resolved">      
+    </leaflet>
+    
+    <button ng-click="createEvent()">Start Event</button>
+
+    <p>Active Marker: {{active_marker}}</p>
+    
+  </ion-content>
+
+</ion-view>

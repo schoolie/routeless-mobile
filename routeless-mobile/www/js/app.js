@@ -55,27 +55,38 @@ angular.module('routeless', ['ionic',
         url: '/courses/:courseId',
         views: {
           'home-tab': {
-            templateUrl: 'templates/map.html',
+            templateUrl: 'templates/course.html',
             controller: 'CourseDetailCtrl'
           }
         }
       })
-      .state('tabs.facts', {
-        url: '/facts',
+      .state('tabs.events', {
+        url: '/events',
         views: {
           'home-tab': {
-            templateUrl: 'templates/facts.html'
+            templateUrl: 'templates/events.html',
+            controller: 'EventListCtrl'
           }
         }
       })
-      .state('tabs.facts2', {
-        url: '/facts2',
+      .state('tabs.event', {
+        url: '/events/:eventId',
         views: {
           'home-tab': {
-            templateUrl: 'templates/facts2.html'
+            templateUrl: 'templates/event.html',
+            controller: 'EventDetailCtrl'
           }
         }
       })
+//      .state('tabs.event', {
+//        url: '/events/:eventId',
+//        views: {
+//          'home-tab': {
+//            templateUrl: 'templates/event.html',
+//            controller: 'EventDetailCtrl'
+//          }
+//        }
+//      })
       .state('tabs.about', {
         url: '/about',
         views: {
