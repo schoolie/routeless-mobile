@@ -16,32 +16,17 @@ routelessServices.factory('Event', ['$resource', 'TokenService', 'rlConfig',
             q: '@q'
           },
           transformResponse: function(data) {
-            if (variable.constructor === Array
-)
-            console.log(data);
             data = JSON.parse(data);
-            data.center = {
-              lat: parseFloat(data.course.lat, 10) || 40.4279,
-              lng: parseFloat(data.course.lng, 10) || -86.9188,
-              zoom: parseInt(data.course.zoom) || 14
-            };
-            
-            data.markers = {};
-            if('check_points' in data.course){
-              data.course.check_points.forEach(function(cp){
-                cp.draggable = true;
-                data.markers[cp.id] = {
-                  id: cp.id,
-                  lat: cp.lat,
-                  lng: cp.lng,
-                  title: cp.id,
-                  message: cp.message
-                };
-              });
+            if (!('num_results' in data)) {
+              data.center = {
+                lat: parseFloat(data.course.lat, 10) || 40.4279,
+                lng: parseFloat(data.course.lng, 10) || -86.9188,
+                zoom: parseInt(data.course.zoom) || 14
+              };
             }
+            console.log(data);
             return data;
-          }
-          
+          } 
         }
     });
   }]);

@@ -63,13 +63,14 @@ routelessControllers.controller('CourseDetailCtrl',
           });
 
           var cp_from_id = function(id) {
+            var found_cp;
             $scope.course.check_points.forEach(function(cp) {
               var cp = cp;
               if (cp.id === id) {
-                console.log(cp);
-                return cp;
+                found_cp = cp;
               }
             });
+            return found_cp;
           };
           
           var active_id;
@@ -81,7 +82,6 @@ routelessControllers.controller('CourseDetailCtrl',
                 if (event.name === 'leafletDirectiveMarker.myMap.click') {
 //                  $scope.eventDetected = event.name;
                   active_id = args.leafletEvent.target.options.id;
-                  console.log(cp_from_id(active_id));
                   $scope.active_marker = cp_from_id(active_id);
                 }
               });
