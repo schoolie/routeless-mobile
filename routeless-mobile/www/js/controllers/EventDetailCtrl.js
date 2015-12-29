@@ -35,7 +35,8 @@ routelessControllers.controller('EventDetailCtrl',
          */
         $scope.$on("$stateChangeSuccess", function() {
 
-          angular.extend($scope, {lfevents: {
+          angular.extend($scope, {
+            lfevents: {
               map: {
                   enable: [],
                   logic: 'emit'
@@ -71,6 +72,15 @@ routelessControllers.controller('EventDetailCtrl',
                     url: "http://s3-us-west-1.amazonaws.com/caltopo/topo/{z}/{x}/{y}.png?v=1",
                     type: 'xyz'
                   }
+              }
+            },
+            paths: {circle: {
+                type: "circle",
+                radius: 50,
+                latlngs:  {
+                  lat: 40.442,
+                  lng: -86.909
+                }
               }
             }
           });
