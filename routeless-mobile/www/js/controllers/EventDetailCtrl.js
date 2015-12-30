@@ -6,6 +6,7 @@ routelessControllers.controller('EventDetailCtrl',
     'TokenService',
     'Event',
     'Course',
+    'LogPoint',
     
     function(
       $scope,
@@ -14,7 +15,8 @@ routelessControllers.controller('EventDetailCtrl',
       leafletMarkerEvents,
       TokenService,
       Event,
-      Course) {
+      Course,
+      LogPoint) {
             
         var cp_idx_from_id = function(id) {
 //            var found_cp;
@@ -77,6 +79,7 @@ routelessControllers.controller('EventDetailCtrl',
             paths: {circle: {
                 type: "circle",
                 radius: 50,
+                weight: 1,
                 latlngs:  {
                   lat: 40.442,
                   lng: -86.909
@@ -88,40 +91,53 @@ routelessControllers.controller('EventDetailCtrl',
 
           
           var active_id;
+          var active_idx;
           
           var markerEvents = leafletMarkerEvents.getAvailableEvents();
           for (var k in markerEvents){
               var eventName = 'leafletDirectiveMarker.myMap.' + markerEvents[k];
               $scope.$on(eventName, function(event, args){
-                if (event.name === 'leafletDirectiveMarker.myMap.mouseout') {
+                if (event.name === 'leafletDirectiveMarker.myMap.click') {
 //                  $scope.eventDetected = event.name;
                   active_id = args.leafletEvent.target.options.id;
-                  $scope.active_marker = $scope.event.course.check_points[cp_idx_from_id(active_id)];
-                  $scope.checkDistance(active_id);
+                  active_idx = cp_idx_from_id(active_id);
+                  $scope.active_marker = $scope.event.course.check_points[active_idx];
+                  $scope.createLogPoint(active_idx);
                 }
               });
           }
           
           $scope.event = Event.query({id: $stateParams.eventId}, success=function() {
             console.log('success');
-            var course = Course.query({id: $scope.event.course.id}, success=function(){
-              $scope.event.course = course;
-            });
+            console.log($scope.event);
           });          
           
         });
             
-        $scope.checkDistance = function(active_id) {
+        $scope.createLogPoint = function(active_idx) {
 
           $cordovaGeolocation
             .getCurrentPosition({enableHighAccuracy:true})
             .then(function (position) {
-              target = $scope.event.course.check_points[cp_idx_from_id(active_id)];
+              target = $scope.event.course.check_points[active_idx];
+      
               targLatLng = L.latLng(target.lat, target.lng);
               currLatLng = L.latLng(position.coords.latitude, position.coords.longitude);
-              distance = currLatLng.distanceTo(targLatLng);
+              
+              var distance = currLatLng.distanceTo(targLatLng);
               console.log(distance);
-              $scope.event.course.check_points[cp_idx_from_id(active_id)].distance = distance;
+              
+              var log_point = new LogPoint({
+                check_point_log_id: $scope.event.check_point_logs[active_idx].id,
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+                distance: distance,
+                type: 'found'
+              });
+              log_point.$save();
+
+              $scope.event.check_point_logs[active_idx].log_points.push(log_point);
+              
             }, function(err) {
               // error
               console.log("Location error!");

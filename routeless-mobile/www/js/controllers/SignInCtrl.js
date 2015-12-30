@@ -19,7 +19,7 @@ routelessControllers.controller('SignInCtrl',
     function errorAuth(res) {
       console.log('Invalid Sign-In', $scope.user);
       $scope.error = 'Invalid credentials.';
-      $state.go('tabs.sign-in');
+      $state.go('signin');
     }
     
     $scope.signIn = function() {

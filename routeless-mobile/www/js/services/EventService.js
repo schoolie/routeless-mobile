@@ -17,6 +17,8 @@ routelessServices.factory('Event', ['$resource', 'TokenService', 'rlConfig',
           },
           transformResponse: function(data) {
             data = JSON.parse(data);
+            console.log(data);
+
             if (!('num_results' in data)) {
               data.center = {
                 lat: parseFloat(data.course.lat, 10) || 40.4279,
@@ -27,6 +29,18 @@ routelessServices.factory('Event', ['$resource', 'TokenService', 'rlConfig',
             console.log(data);
             return data;
           } 
+        },
+        update: {
+          method: 'PUT',
+          headers: TokenService.authHeaders,
+//          transformRequest: function(data) {
+//            console.log(data);
+//            var proc_data = data;
+////            delete proc_data.autoDiscover;
+//            delete proc_data.center;
+//            console.log(proc_data);
+//            return JSON.stringify(proc_data);
+//          }
         }
     });
   }]);
