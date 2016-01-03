@@ -16,15 +16,13 @@
     <leaflet id="myMap"
              layers="layers" 
              center="event.center" 
-             markers="event.course.check_points" 
-             paths="paths"
              event-broadcast="lfevents"
              ng-if="event.$resolved">      
     </leaflet>
     
     <button ng-click="createEvent()">Start Event</button>
 
-    <p>Active Marker: {{active_marker}}</p>
+    <p>Active Marker Test: {{active_marker}}</p>
     
   </ion-content>
 
