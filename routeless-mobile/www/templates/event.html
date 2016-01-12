@@ -18,10 +18,11 @@
              center="event.center" 
              markers="markers"
              event-broadcast="lfevents"
+             data-tap-disabled="true" 
              ng-if="event.$resolved">      
     </leaflet>
     
-    <button ng-click="createEvent()">Start Event</button>
+    <button ng-click="createLogPoint()">Check Location</button>
 
     <p>Active Marker Test: {{active_marker}}</p>
     

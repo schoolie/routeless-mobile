@@ -37,8 +37,8 @@ routelessControllers.controller('EventDetailCtrl',
           var active_id = e.target.feature.properties.id;
           active_idx = cp_idx_from_id(active_id);
           $scope.active_marker = $scope.event.course.check_points[active_idx];
+          $scope.active_idx = active_idx;
           $scope.$apply();
-          $scope.createLogPoint(active_idx);
         };
         
         // Function to bind click callbacks to GeoJSON points
@@ -46,7 +46,7 @@ routelessControllers.controller('EventDetailCtrl',
           //bind click
           layer.on('click', layerClickCallback);
         };
-
+        
 
         var createGeoJSON = function(name, marker_func) {
           var GeoJSON = {
@@ -71,7 +71,7 @@ routelessControllers.controller('EventDetailCtrl',
                 
           var color = '#f00';
           if (lp.type === 'found') {
-            color = '#00f';
+            color = '#0f0';
           }
           else if (lp.type === 'near') {
             color = '#ffff00'
@@ -90,8 +90,7 @@ routelessControllers.controller('EventDetailCtrl',
           };
 
           $scope.layers.overlays.logpoints.data.features.push(point_data);
-
-
+          $scope.layers.overlays.logpoints.doRefresh = true;
         };
         
         /**
@@ -160,7 +159,7 @@ routelessControllers.controller('EventDetailCtrl',
                 ),                
                 checkpoints: createGeoJSON('Check Points', function(feature, latlng) {
                     return L.circleMarker(latlng, {
-                      color: '#33f',
+                      color: feature.properties.color || '#33f',
                       weight: 2,
                       fillOpacity: 1
                     });
@@ -212,6 +211,7 @@ routelessControllers.controller('EventDetailCtrl',
               var point_data = {
                 type: "Feature",
                 properties: {
+                  id: cp.id,
                   title: cp.title,
                   description: cp.message,
                   near_distance: cp.near_distance,
@@ -233,24 +233,22 @@ routelessControllers.controller('EventDetailCtrl',
             $scope.event.check_point_logs.forEach(function(cpl) {
               cpl.log_points.forEach(addLogPoint);
             });
-            
-            console.log($scope.event);
-            
+                        
           });          
           
         });
             
-        $scope.createLogPoint = function(active_idx) {
+        $scope.createLogPoint = function() {
 
           $cordovaGeolocation
             .getCurrentPosition({enableHighAccuracy:true})
             .then(function (position) {
-              target = $scope.event.course.check_points[active_idx];
+              target = $scope.event.course.check_points[$scope.active_idx];
       
               targLatLng = L.latLng(target.lat, target.lng);
               currLatLng = L.latLng(position.coords.latitude, position.coords.longitude);
                             
-              $scope.markers = [currLatLng];
+//              $scope.markers = [currLatLng];
               
               var distance = currLatLng.distanceTo(targLatLng);
               console.log(distance);
@@ -260,13 +258,22 @@ routelessControllers.controller('EventDetailCtrl',
               if (distance <= target.found_distance) {
                 type = 'found';
                 found = 1;
+                $scope.layers.overlays.checkpoints.data.features[$scope.active_idx].properties.color = '#0f0';
+                $scope.layers.overlays.checkpoints.doRefresh = true;
+
               }
               else if (distance <= target.near_distance) {
                 type = 'near';
+                $scope.layers.overlays.checkpoints.data.features[$scope.active_idx].properties.color = '#ffff00';
+                $scope.layers.overlays.checkpoints.doRefresh = true;
               }
-              console.log(type);
+              else {
+                $scope.layers.overlays.checkpoints.data.features[$scope.active_idx].properties.color = '#33f';
+                $scope.layers.overlays.checkpoints.doRefresh = true;
+              }
+              console.log($scope.layers.overlays.checkpoints.data.features[$scope.active_idx]);
               var log_point = new LogPoint({
-                check_point_log_id: $scope.event.check_point_logs[active_idx].id,
+                check_point_log_id: $scope.event.check_point_logs[$scope.active_idx].id,
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
                 distance: distance,
@@ -276,7 +283,7 @@ routelessControllers.controller('EventDetailCtrl',
               
               addLogPoint(log_point);
 
-              $scope.event.check_point_logs[active_idx].log_points.push(log_point);
+              $scope.event.check_point_logs[$scope.active_idx].log_points.push(log_point);
               
             }, function(err) {
               // error
