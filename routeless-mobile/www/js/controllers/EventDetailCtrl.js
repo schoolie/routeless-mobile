@@ -3,6 +3,7 @@ routelessControllers.controller('EventDetailCtrl',
     '$cordovaGeolocation',
     '$stateParams',
     'leafletMarkerEvents',
+    'filterFilter',
     'TokenService',
     'Event',
     'Course',
@@ -13,6 +14,7 @@ routelessControllers.controller('EventDetailCtrl',
       $cordovaGeolocation,
       $stateParams,
       leafletMarkerEvents,
+      filterFilter,
       TokenService,
       Event,
       Course,
@@ -38,7 +40,20 @@ routelessControllers.controller('EventDetailCtrl',
           active_idx = cp_idx_from_id(active_id);
           $scope.active_marker = $scope.event.course.check_points[active_idx];
           $scope.active_idx = active_idx;
+          
+          updateLogPoints();
           $scope.$apply();
+        };
+        
+        var updateLogPoints = function() {
+          $scope.layers.overlays.logpoints.data.features = [];
+          $scope.logpoints.forEach(function(lp) {
+            console.log(lp);
+            if (lp.properties.cp_id === $scope.active_marker.id) {
+              $scope.layers.overlays.logpoints.data.features.push(lp);
+            }
+          });
+          $scope.layers.overlays.logpoints.doRefresh = true;
         };
         
         // Function to bind click callbacks to GeoJSON points
@@ -48,7 +63,7 @@ routelessControllers.controller('EventDetailCtrl',
         };
         
 
-        var createGeoJSON = function(name, marker_func) {
+        var createGeoJSON = function(name, marker_func, filter_func) {
           var GeoJSON = {
                   name: name,
                   type: 'geoJSONShape',
@@ -62,26 +77,30 @@ routelessControllers.controller('EventDetailCtrl',
                       return marker_func(feature, latlng);
                     },
                     onEachFeature: onEachFeature
+                  },
+                  filter: function (feature, latlng) {
+                    return filter_func(feature, latlng);
                   }
                 };
           return GeoJSON;
         };
         
-        var addLogPoint = function(lp) {
-                
+        var addLogPoint = function(lp, cp_id) {
+
           var color = '#f00';
           if (lp.type === 'found') {
             color = '#0f0';
           }
           else if (lp.type === 'near') {
-            color = '#ffff00'
+            color = '#ffff00';
           }
 
           var point_data = {
             type: "Feature",
             properties: {
               distance: lp.distance,
-              color: color
+              color: color,
+              cp_id: cp_id
             },
             geometry: {
               type: "Point",
@@ -89,8 +108,7 @@ routelessControllers.controller('EventDetailCtrl',
             }
           };
 
-          $scope.layers.overlays.logpoints.data.features.push(point_data);
-          $scope.layers.overlays.logpoints.doRefresh = true;
+          $scope.logpoints.push(point_data);
         };
         
         /**
@@ -172,7 +190,13 @@ routelessControllers.controller('EventDetailCtrl',
                       radius: 5,
                       fillOpacity: 1
                     });
+                  },
+                  function(feature, latlng) {
+                    if (feature.properties.cp_id === $scope.active_marker.id) {
+                      return feature;
+                    }
                   }
+                          
                 ),                    
                 labels: createGeoJSON('Labels', function(feature, latlng) {
                   return L.marker(latlng, {
@@ -191,7 +215,6 @@ routelessControllers.controller('EventDetailCtrl',
             }      
           });
           
-          
           var active_id;
           var active_idx;
           
@@ -202,12 +225,12 @@ routelessControllers.controller('EventDetailCtrl',
 //          }
           
           $scope.event = Event.query({id: $stateParams.eventId}, success=function() {
-            console.log('success');
+            console.log($scope.event);
 //            $scope.layers.overlays.checkpoints.data.features.geometry = 
             
             // Add Check Point info to GeoJSON Layers
             $scope.event.course.check_points.forEach(function(cp) {
-              
+
               var point_data = {
                 type: "Feature",
                 properties: {
@@ -230,8 +253,12 @@ routelessControllers.controller('EventDetailCtrl',
               
             });
             
+            $scope.logpoints = [];
             $scope.event.check_point_logs.forEach(function(cpl) {
-              cpl.log_points.forEach(addLogPoint);
+              console.log(cpl);
+              cpl.log_points.forEach(function(lp) {
+                addLogPoint(lp, cpl.check_point.id);
+              });
             });
                         
           });          
@@ -281,8 +308,8 @@ routelessControllers.controller('EventDetailCtrl',
               });
               log_point.$save();
               
-              addLogPoint(log_point);
-
+              addLogPoint(log_point, target.id);
+              updateLogPoints();
               $scope.event.check_point_logs[$scope.active_idx].log_points.push(log_point);
               
             }, function(err) {
